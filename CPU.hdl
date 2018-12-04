@@ -40,11 +40,31 @@ CHIP CPU {
 
     PARTS:
     // Put your code here:
-	Mux16(a=outM[0..15],b=instruction[0..15],sel=reset,out=muxout);
+	And(a=instruction[12],b=instruction[11],out=andout1);
+	And(a=instruction[10],b=andout1,out=andout2);
+	And(a=instruction[9],b=andout2,out=andout3);
+	And(a=instruction[8],b=andout3,out=andout4);
+	And(a=instruction[7],b=andout4,out=andout5);
+	And(a=instruction[6],b=andout5,out=andout6);
+	
+	And(a=instruction[5],b=instruction[4],out=andout7);
+	And(a=instruction[3],b=andout7,out=andout8);
+	
+	And(a=instruction[2],b=instruction[1],out=andout9);
+	And(a=instruction[0],b=andout9,out=andout0);
+	
+	Mux16(a=outM,b=instruction[15],sel=andout6,out=muxout);
 	ARegister(in=muxout,load=true,out=regout);
-	Mux16(a=regout,b=inM[0..15],sel=reset,out=muxout2);
+	
 	PC(in=in[0..15],load=true,out=pcout);
 	DRegister(in=outM,load=true,out=dregout);
-	ALU(x=dregout,y=muxout2,out=outM[0..15]);
 	
+	Mux16(a=regout,b=inM[15],sel=andout6,out=muxout2);
+	
+	Not(a=dregout,out=notdregout);
+	Not(a=muxout2,out=notmuxout2);
+	Or(a=notdregout,b=notmuxout2,out=finalout);
+	
+	
+	ALU(x=dregout,y=muxout2,zx=,nx=notdregout,zy=,ny=notmuxout2,f=finalout,no=,zr=andout6,ng=andout6,out=outM);
 }
