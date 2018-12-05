@@ -40,31 +40,34 @@ CHIP CPU {
 
     PARTS:
     // Put your code here:
-	And(a=instruction[12],b=instruction[11],out=andout1);
-	And(a=instruction[10],b=andout1,out=andout2);
-	And(a=instruction[9],b=andout2,out=andout3);
-	And(a=instruction[8],b=andout3,out=andout4);
-	And(a=instruction[7],b=andout4,out=andout5);
-	And(a=instruction[6],b=andout5,out=andout6);
+	Not(in=instruction[15],out=notin);
+	Mux16(a=aluout,b=instruction,sel=notin,out=muxout);
 	
-	And(a=instruction[5],b=instruction[4],out=andout7);
-	And(a=instruction[3],b=andout7,out=andout8);
+	Or(a=notin,b=instruction[5],out=aout);
+	ARegister(in=muxout,load=aout,out=aregout,out[0..14]=addressM);
+
+	And(a=instruction[4],b=instruction[15],out=dout);
+	DRegister(in=aluout,load=dout,out=dregout);
 	
-	And(a=instruction[2],b=instruction[1],out=andout9);
-	And(a=instruction[0],b=andout9,out=andout0);
+	And(a=instruction[12],b=instruction[15],out=out1);
+	Mux16(a=aregout,b=inM,sel=out1,out=muxout2);
+
+	And(a=instruction[3],b=instruction[15],out=writeM);	
 	
-	Mux16(a=outM,b=instruction[15],sel=andout6,out=muxout);
-	ARegister(in=muxout,load=true,out=regout);
+	ALU(x=dregout,y=muxout2,zx=instruction[11],nx=instruction[10],zy=instruction[9],ny=instruction[8],f=instruction[7],no=instruction[6],zr=zrout,ng=ngout,out=aluout,out=outM);
+	Not(in=zrout,out=notzrout);
+	Not(in=ngout,out=notngout);
+	And(a=instruction[15],b=instruction[0],out=jgt);
+	And(a=notngout,b=notzrout,out=notzrngout);
+	And(a=jgt,b=notzrngout,out=out2);
 	
-	PC(in=in[0..15],load=true,out=pcout);
-	DRegister(in=outM,load=true,out=dregout);
+	And(a=instruction[1],b=instruction[15],out=jeq);
+	And(a=instruction[2],b=instruction[15],out=jlt);
 	
-	Mux16(a=regout,b=inM[15],sel=andout6,out=muxout2);
+	And(a=jlt,b=ngout,out=out3);
+	And(a=jeq,b=zrout,out=out4);
+	Or(a=out2,b=out3,out=jle);
+	Or(a=jle,b=out4,out=orout);
 	
-	Not(a=dregout,out=notdregout);
-	Not(a=muxout2,out=notmuxout2);
-	Or(a=notdregout,b=notmuxout2,out=finalout);
-	
-	
-	ALU(x=dregout,y=muxout2,zx=,nx=notdregout,zy=,ny=notmuxout2,f=finalout,no=,zr=andout6,ng=andout6,out=outM);
+	PC(in=aregout,inc=true,load=orout,reset=reset,out[0..14]=pc);	
 }
