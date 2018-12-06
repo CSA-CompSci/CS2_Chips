@@ -33,7 +33,7 @@ D;JEQ
 D=M
 @SCREEN
 A=A+D //finds address
-M=-1 //turn screen black
+M=-1 //fill screen black
 @END //go to end
 0;JMP
 
@@ -42,7 +42,7 @@ M=-1 //turn screen black
 D=M
 @SCREEN
 A=A+D //find address
-M=0 //turn screen white, go straight to end
+M=0 //fill screen white, go straight to end
 
 (END)
 @index
