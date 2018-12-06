@@ -65,7 +65,6 @@ CHIP CPU {
 	And(a=instruction[1],b=instruction[15],out=jeq);
 	And(a=instruction[2],b=instruction[15],out=jlt);
 	
-	//takes all outputs to create one input
 	And(a=jlt,b=ngout,out=out3);
 	And(a=jeq,b=zrout,out=out4);
 	Or(a=out2,b=out3,out=jle);
