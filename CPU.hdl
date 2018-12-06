@@ -41,7 +41,7 @@ CHIP CPU {
     PARTS:
     // Put your code here:
 	Not(in=instruction[15],out=notin);
-	Mux16(a=aluout,b=instruction,sel=notin,out=muxout);
+	Mux16(a=aluout,b=instruction,sel=notin,out=muxout); //uses alu output to input into program
 	
 	Or(a=notin,b=instruction[5],out=aout);
 	ARegister(in=muxout,load=aout,out=aregout,out[0..14]=addressM);
@@ -54,6 +54,7 @@ CHIP CPU {
 
 	And(a=instruction[3],b=instruction[15],out=writeM);	
 	
+	//takes output from D register and output from the mux to create one output from alu
 	ALU(x=dregout,y=muxout2,zx=instruction[11],nx=instruction[10],zy=instruction[9],ny=instruction[8],f=instruction[7],no=instruction[6],zr=zrout,ng=ngout,out=aluout,out=outM);
 	Not(in=zrout,out=notzrout);
 	Not(in=ngout,out=notngout);
@@ -64,10 +65,11 @@ CHIP CPU {
 	And(a=instruction[1],b=instruction[15],out=jeq);
 	And(a=instruction[2],b=instruction[15],out=jlt);
 	
+	//takes all outputs to create one input
 	And(a=jlt,b=ngout,out=out3);
 	And(a=jeq,b=zrout,out=out4);
 	Or(a=out2,b=out3,out=jle);
 	Or(a=jle,b=out4,out=orout);
 	
-	PC(in=aregout,inc=true,load=orout,reset=reset,out[0..14]=pc);	
+	PC(in=aregout,inc=true,load=orout,reset=reset,out[0..14]=pc); //takes the one input and outputs as pc
 }
