@@ -23,7 +23,7 @@ D;JEQ //if d is zero go to end
 @R0
 D=M //store m in d to use later, store into R0
 @sum
-M=M+D //combine M, R1, and D, R0.. put into sum
+M=M+D //combine M (R1) and D (R0).. put into sum
 @count
 M=M-1
 @LOOP //go back to loop
