@@ -13,43 +13,43 @@
 
 // Put your code here.
 
-@8192
+@8192 //total amount of bytes
 D=A
 @count
-M=D
+M=D //count the number of bytes and save into the memory
 
 (LOOP)
-@index
-M=0
+@index //start at 0
+M=0 //screen is white
 
 (INNER)
-@KBD
+@KBD //determines if keyboard is pressed
 D=M
-@WHITE
+@WHITE //if it is not pressed go to white
 D;JEQ
 
 (BLACK)
 @index
 D=M
 @SCREEN
-A=A+D
-M=-1
-@END
+A=A+D //finds address
+M=-1 //turn screen black
+@END //go to end
 0;JMP
 
 (WHITE)
 @index
 D=M
 @SCREEN
-A=A+D
-M=0
+A=A+D //find address
+M=0 //turn screen white, go straight to end
 
 (END)
 @index
 MD=M+1
 @count
-D=D-M
-@LOOP
+D=D-M //shift the bytes
+@LOOP //if it reaches the end of the screen, go to loop
 D;JEQ
-@INNER
+@INNER //otherwise go back to inner
 0;JMP
