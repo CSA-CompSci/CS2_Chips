@@ -19,9 +19,9 @@ M=D //put value from R1 into count
 @count
 D=M
 @END
-D;JEQ //if d is zero go to end
+D;JEQ //if product is zero go to end
 @R0
-D=M //store m in d to use later, store into R0
+D=M //store second product into R0
 @sum
 M=M+D //combine M (R1) and D (R0).. put into sum
 @count
