@@ -22,8 +22,8 @@ M=D //count the number of bytes and save into the memory
 @index //start at 0
 M=0 //screen is white
 
-(INNER)
-@KBD //determines if keyboard is pressed
+(INNER) //determines if keyboard is pressed
+@KBD
 D=M
 @WHITE //if it is not pressed go to white
 D;JEQ
