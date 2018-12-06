@@ -9,28 +9,28 @@
 // Put your code here.
 
 @sum
-M=0
+M=0 //storing 0 in sum
 @R1
 D=M
 @count
-M=D
+M=D //put value from R1 into count
 
 (LOOP)
 @count
 D=M
-@ENDs
-D;JEQ
+@END
+D;JEQ //if d is zero go to end
 @R0
-D=M
+D=M //store m in d to use later, store into R0
 @sum
-M=M+D
+M=M+D //combine M, R1, and D, R0.. put into sum
 @count
 M=M-1
-@LOOP
+@LOOP //go back to loop
 0;JMP
 
 (END)
 @sum
-D=M
+D=M //take sum and store
 @R2
-M=D
+M=D //the product is stored into R2
