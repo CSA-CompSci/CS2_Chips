@@ -13,15 +13,15 @@ M=0 //storing 0 in sum
 @R1
 D=M
 @count
-M=D //put value from R1 into count
+M=D //make value from R1 equal count
 
 (LOOP)
 @count
 D=M
 @END
-D;JEQ //if product is zero go to end
+D;JEQ //if count is zero go to end
 @R0
-D=M //store second product into R0
+D=M //store second number into R0
 @sum
 M=M+D //combine M (R1) and D (R0).. put into sum
 @count
@@ -33,4 +33,4 @@ M=M-1
 @sum
 D=M //take sum and store
 @R2
-M=D //the product is stored into R2
+M=D //store sum into R2
