@@ -20,7 +20,7 @@ M=D //count the number of bytes and save into the memory
 
 (LOOP)
 @index //start at 0
-M=0 //screen is white
+M=0
 
 (INNER) //determines if keyboard is pressed
 @KBD
