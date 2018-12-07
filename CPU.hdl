@@ -40,6 +40,8 @@ CHIP CPU {
 
     PARTS:
     // Put your code here:
+    
+	//determines whether it is a instruction or b instruction, 0=a
 	Not(in=instruction[15],out=notin);
 	Mux16(a=aluout,b=instruction,sel=notin,out=muxout);
 	
@@ -49,26 +51,29 @@ CHIP CPU {
 	And(a=instruction[4],b=instruction[15],out=dout);
 	DRegister(in=aluout,load=dout,out=dregout);
 	
+	//determines whether to use a register or inM for ALU
 	And(a=instruction[12],b=instruction[15],out=out1);
 	Mux16(a=aregout,b=inM,sel=out1,out=muxout2);
 
 	And(a=instruction[3],b=instruction[15],out=writeM);	
 	
-	
+	//uses d register and a register/inM for ALU
 	ALU(x=dregout,y=muxout2,zx=instruction[11],nx=instruction[10],zy=instruction[9],ny=instruction[8],f=instruction[7],no=instruction[6],zr=zrout,ng=ngout,out=aluout,out=outM);
 	Not(in=zrout,out=notzrout);
 	Not(in=ngout,out=notngout);
-	And(a=instruction[15],b=instruction[0],out=jgt);
+	And(a=instruction[15],b=instruction[0],out=jgt); //out>0
 	And(a=notngout,b=notzrout,out=notzrngout);
 	And(a=jgt,b=notzrngout,out=out2);
 	
-	And(a=instruction[1],b=instruction[15],out=jeq);
-	And(a=instruction[2],b=instruction[15],out=jlt);
+	And(a=instruction[1],b=instruction[15],out=jeq); //out=0
+	And(a=instruction[2],b=instruction[15],out=jlt); //out<0
 	
+	//determines whether output is >0, <0, or =0
 	And(a=jlt,b=ngout,out=out3);
 	And(a=jeq,b=zrout,out=out4);
 	Or(a=out2,b=out3,out=jle);
 	Or(a=jle,b=out4,out=orout);
 	
+	//use loadbit from previous output to get final output
 	PC(in=aregout,inc=true,load=orout,reset=reset,out[0..14]=pc);
 }
